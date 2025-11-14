@@ -1,0 +1,13 @@
+flask
+pandas
+sentence-transformers
+faiss-cpu
+tqdm
+openai
+python-dotenv
+numpy
+openpyxl
+streamlit
+openpyxl
+openpyxl
+
