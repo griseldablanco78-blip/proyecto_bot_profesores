@@ -1,0 +1,7 @@
+timestamp,question,response,contexts
+2025-10-28T16:31:21.161825,"Consultarte la materia legua, que contenidos tendria para realizar la primer unidad para primer año?",Shown sources only,Contenidos_priorizados#1 | CONTENIDOS_Proveedor#4 | CONTENIDOS_Proveedor#5 | Contenidos_priorizados#0 | CONTENIDOS_Proveedor#6
+2025-10-28T16:41:25.735530,¿Qué temas abordan las actividades de comprensión lectora?,No results,
+2025-10-28T16:41:49.090581,contenidos segunda unidad matematicas,Shown sources only,MATERIAS_UNIFICADAS#1997 | MATERIAS_UNIFICADAS#1677 | MATERIAS_UNIFICADAS#641 | MATERIAS_UNIFICADAS#2653 | MATERIAS_UNIFICADAS#3018
+2025-10-28T16:42:28.506576,openai_api_key,Shown sources only,CONTENIDOS_PRODUCIDOS#200 | CONTENIDOS_PRODUCIDOS#84 | CONTENIDOS_PRODUCIDOS#64 | CONTENIDOS_PRODUCIDOS#319 | CONTENIDOS_PRODUCIDOS#86
+2025-10-28T16:42:38.485990,5,Shown sources only,AÑOS_ACADEMICOS#4 | TIPO_PROVEEDOR#4 | AÑOS_ACADEMICOS#5 | MATERIAS_UNIFICADAS#3284 | MATERIAS_UNIFICADAS#3294
+2025-10-28T16:45:01.463293,"python src\indexer.py --excel ""C:\Users\grise\OneDrive\Escritorio\proyecto Gobierno de la ciudad\proyecto_bot_profesores\data\Base de Datos Ecosistema Secundaria Aprende.xlsx""",Shown sources only,DICCIONARIO#20 | DICCIONARIO#7 | DICCIONARIO#14 | DICCIONARIO#23 | DICCIONARIO#0
