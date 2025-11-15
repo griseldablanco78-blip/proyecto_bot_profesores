@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 pandas
 sentence-transformers
 faiss-cpu
@@ -5,3 +6,16 @@ tqdm
 openai
 python-dotenv
 numpy
+=======
+pandas
+sentence-transformers
+faiss-cpu
+tqdm
+openai
+python-dotenv
+numpy
+streamlit
+gspread
+oauth2client
+Pillow
+>>>>>>> 71912f9 (Rename app to streamlit_app.py for Streamlit Cloud)
