@@ -9,3 +9,5 @@ streamlit
 gspread
 oauth2client
 Pillow
+matplotlib
+scikit-learn
