@@ -1,21 +1,8 @@
-<<<<<<< HEAD
+streamlit>=1.20
 pandas
-sentence-transformers
-faiss-cpu
-tqdm
-openai
-python-dotenv
 numpy
-=======
-pandas
-sentence-transformers
-faiss-cpu
-tqdm
-openai
-python-dotenv
-numpy
-streamlit
-gspread
-oauth2client
+matplotlib
+plotly
 Pillow
->>>>>>> 71912f9 (Rename app to streamlit_app.py for Streamlit Cloud)
+requests
+scikit-learn
