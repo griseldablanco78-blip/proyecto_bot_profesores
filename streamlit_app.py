@@ -896,3 +896,4 @@ if buscar:
 st.markdown("---")
 >>>>>>> 88f01c5 (Primer commit: proyecto_bot_profesores - versión inicial)
 
+
