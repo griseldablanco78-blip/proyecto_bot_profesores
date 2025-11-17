@@ -17,52 +17,76 @@ st.set_page_config(page_title="Tutor IA para Profesores", layout="wide")
 # ---------------------------
 # Config: URL pública del Google Sheet (modificá si necesitás otra)
 # ---------------------------
-# --- Inicio parche para carga segura desde Google Sheets ---
-import re
-import requests
+# --- Inicio: carga de datos local con fallback remoto ---
 import streamlit as st
-import io
 import pandas as pd
+import io
+import requests
+from pathlib import Path
+import os
 
-# Poné acá la URL pública del Google Sheet que usás (la de "Compartir" o la de edición)
-# Ejemplo: "https://docs.google.com/spreadsheets/d/1AbCdeFGHIjkLmNoPqRstuVWXYZ/edit#gid=0"
-GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1uIMdArE1WHNFDecNlsXW1Pb3hJl_u4HgkFJiFTIxWjk/edit?gid=1526116986#gid=1526116986"
+st.write("Iniciando carga de datos...")
 
-def sheet_export_csv_url(sheet_url: str) -> str:
-    """Convierte una URL de Google Sheets a su URL de export CSV (format=csv)."""
-    # extraer el id del sheet
-    m = re.search(r"/spreadsheets/d/([a-zA-Z0-9-_]+)", sheet_url)
-    if not m:
-        return sheet_url  # si no coincide, devolver la URL original (no la tocamos)
-    sheet_id = m.group(1)
-    # buscar gid (si no está, usar 0)
-    gid_m = re.search(r"gid=(\d+)", sheet_url)
-    gid = gid_m.group(1) if gid_m else "0"
-    return f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid={gid}"
+# Ruta local (tu Excel en OneDrive)
+LOCAL_EXCEL = r"C:\Users\grise\OneDrive\Escritorio\proyecto Gobierno de la ciudad\proyecto_bot_profesores\data\Base de Datos Ecosistema Secundaria Aprende.xlsx"
 
-EXPORT_URL = sheet_export_csv_url(GOOGLE_SHEET_URL)
+# Si querés mantener un fallback remoto, pon la URL aquí (opcional)
+FALLBACK_EXPORT_URL = None
+# Ejemplo: FALLBACK_EXPORT_URL = "https://raw.githubusercontent.com/usuario/repo/main/data/miarchivo.csv"
 
-# Intento de descarga con manejo de errores — evita la pantalla en blanco y muestra el error en la app
-try:
-    resp = requests.get(EXPORT_URL, timeout=20)
-    resp.raise_for_status()
-except requests.exceptions.RequestException as e:
-    st.error("No se pudieron cargar las hojas desde la URL pública configurada.")
-    st.write("URL probada:", EXPORT_URL)
-    st.write("Verificá que la hoja sea pública o que la URL sea la correcta (export?format=csv).")
-    st.write("Error técnico:", repr(e))
-    st.stop()
+def load_local_excel(path: str):
+    p = Path(path)
+    if p.exists():
+        try:
+            # usar engine openpyxl para .xlsx
+            df = pd.read_excel(p, engine="openpyxl")
+            return df, "local"
+        except Exception as e:
+            return None, f"error_local_parse: {e}"
+    return None, "not_found"
 
-# Si la descarga funciona, parsear como CSV
-try:
-    df_sheet = pd.read_csv(io.StringIO(resp.text))
-    st.success(f"Datos cargados: {len(df_sheet)} filas")
-except Exception as e:
-    st.error("El contenido descargado no pudo ser parseado como CSV.")
-    st.write("Detalle:", repr(e))
-    st.stop()
+def load_from_url(url: str):
+    try:
+        resp = requests.get(url, timeout=20)
+        resp.raise_for_status()
+        # intentar parsear como csv (si el URL entrega CSV)
+        try:
+            df = pd.read_csv(io.StringIO(resp.text))
+            return df, "remote_csv"
+        except Exception:
+            # si no es CSV probamos leer con pandas desde bytes (xls/xlsx)
+            try:
+                df = pd.read_excel(io.BytesIO(resp.content), engine="openpyxl")
+                return df, "remote_excel"
+            except Exception as e:
+                return None, f"error_remote_parse: {e}"
+    except Exception as e:
+        return None, f"error_remote_request: {e}"
 
-# --- fin parche ---
+# 1) Intentar cargar el archivo local
+df, source = load_local_excel(LOCAL_EXCEL)
+if df is not None:
+    st.success(f"Datos cargados desde archivo local: {LOCAL_EXCEL}")
+else:
+    st.warning(f"Archivo local no disponible: {source}")
+    # 2) Si hay fallback remoto configurado, intentar
+    if FALLBACK_EXPORT_URL:
+        df, source2 = load_from_url(FALLBACK_EXPORT_URL)
+        if df is not None:
+            st.success(f"Datos cargados desde URL: {FALLBACK_EXPORT_URL} (tipo: {source2})")
+        else:
+            st.error("No se pudieron cargar datos desde la URL de fallback.")
+            st.write("Detalle:", source2)
+            st.stop()
+    else:
+        st.error("No se encontró el archivo local y no hay URL de fallback configurada.")
+        st.write("Ruta buscada:", LOCAL_EXCEL)
+        st.stop()
+
+# Ahora `df` contiene tus datos; seguí con el resto de la app
+st.write(f"DataFrame: {df.shape[0]} filas x {df.shape[1]} columnas")
+# --- Fin del bloque de carga ---
+
 
 # ---------------------------
 # Utilidades
@@ -871,3 +895,4 @@ if buscar:
 # ---------------------------
 st.markdown("---")
 >>>>>>> 88f01c5 (Primer commit: proyecto_bot_profesores - versión inicial)
+
