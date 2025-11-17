@@ -6,3 +6,4 @@ plotly
 Pillow
 requests
 scikit-learn
+openpyxl
